@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlanPro.Business\PlanPro.Business.csproj" />
+    <ProjectReference Include="..\PlanPro.Security\PlanPro.Security.csproj" />
   </ItemGroup>
 
 
