@@ -43,6 +43,7 @@ namespace PlanPro.API
             //dependency Injection
             //services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProjetService, ProjetService>();
+            services.AddScoped<ITacheService, TacheService>();
 
             //swagger
             services.AddSwaggerGen(c =>
