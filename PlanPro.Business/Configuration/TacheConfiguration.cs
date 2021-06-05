@@ -17,6 +17,8 @@ namespace PlanPro.Business.Configuration
 
             builder.HasOne(p => p.Projet);
 
+            builder.HasOne(p => p.Realisateur);
+
             builder
                 .ToTable("Taches");
         }

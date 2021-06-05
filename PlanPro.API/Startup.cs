@@ -15,8 +15,8 @@ using PlanPro.Business;
 using PlanPro.Business.Interfaces;
 using PlanPro.Business.IServices;
 using PlanPro.Business.Services;
+using PlanPro.Entities.Models;
 using PlanPro.Security;
-using PlanPro.Security.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +50,7 @@ namespace PlanPro.API
             //services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProjetService, ProjetService>();
             services.AddScoped<ITacheService, TacheService>();
+            services.AddScoped<IEquipeService, EquipeService>();
 
             //swagger
             services.AddSwaggerGen(c =>

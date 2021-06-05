@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PlanPro.Security.Models;
+using PlanPro.Entities.Models;
 
 namespace PlanPro.Security
 {

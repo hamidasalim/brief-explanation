@@ -17,6 +17,10 @@ namespace PlanPro.Business.Configuration
 
             builder.HasMany(p => p.Tasks);
 
+            builder.HasMany(p => p.Participants);
+
+            builder.HasOne(p => p.ChefProjet);
+
             builder
                 .ToTable("Projets");
         }

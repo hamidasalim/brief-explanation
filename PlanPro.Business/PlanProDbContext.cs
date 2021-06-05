@@ -8,6 +8,7 @@ namespace PlanPro.Business
     {
         public DbSet<Projet> Projets { get; set; }
         public DbSet<Tache> Taches { get; set; }
+        public DbSet<Equipe> Equipes { get; set; }
 
         public PlanProDbContext(DbContextOptions<PlanProDbContext> options)
        : base(options)
@@ -16,6 +17,7 @@ namespace PlanPro.Business
         {
             builder.ApplyConfiguration(new ProjetConfiguration());
             builder.ApplyConfiguration(new TacheConfiguration());
+            builder.ApplyConfiguration(new EquipeConfiguration());
         }
     }
 }

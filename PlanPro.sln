@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanPro.API", "PlanPro.API\PlanPro.API.csproj", "{8292F221-2D7C-4B5D-B403-381FBB960826}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.API", "PlanPro.API\PlanPro.API.csproj", "{8292F221-2D7C-4B5D-B403-381FBB960826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanPro.Business", "PlanPro.Business\PlanPro.Business.csproj", "{2BAA303E-02FC-4757-9E0B-39B9F4C2F3C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Business", "PlanPro.Business\PlanPro.Business.csproj", "{2BAA303E-02FC-4757-9E0B-39B9F4C2F3C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanPro.Entities", "PlanPro.Entities\PlanPro.Entities.csproj", "{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Entities", "PlanPro.Entities\PlanPro.Entities.csproj", "{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanPro.Security", "PlanPro.Security\PlanPro.Security.csproj", "{DD871BA1-1403-4924-8091-CD995515AEE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Security", "PlanPro.Security\PlanPro.Security.csproj", "{DD871BA1-1403-4924-8091-CD995515AEE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

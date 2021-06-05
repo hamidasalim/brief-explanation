@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace PlanPro.Security.Models
+namespace PlanPro.Entities.Models
 {
     public class ApplicationRole : IdentityRole
     {

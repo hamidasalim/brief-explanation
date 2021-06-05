@@ -10,7 +10,7 @@ using PlanPro.Business;
 namespace PlanPro.Business.Migrations
 {
     [DbContext(typeof(PlanProDbContext))]
-    [Migration("20210502130358_initDB")]
+    [Migration("20210605122129_initDB")]
     partial class initDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,29 @@ namespace PlanPro.Business.Migrations
                 .HasAnnotation("ProductVersion", "3.1.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("PlanPro.Entities.Equipe", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IDChef")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdMembers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Equipes");
+                });
 
             modelBuilder.Entity("PlanPro.Entities.Projet", b =>
                 {
@@ -65,6 +88,9 @@ namespace PlanPro.Business.Migrations
                     b.Property<int>("ProjetID")
                         .HasColumnType("int");
 
+                    b.Property<string>("RealisateurID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
@@ -72,7 +98,61 @@ namespace PlanPro.Business.Migrations
 
                     b.HasIndex("ProjetID");
 
+                    b.HasIndex("RealisateurID");
+
                     b.ToTable("Taches");
+                });
+
+            modelBuilder.Entity("PlanPro.Security.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("PlanPro.Entities.Tache", b =>
@@ -82,6 +162,10 @@ namespace PlanPro.Business.Migrations
                         .HasForeignKey("ProjetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PlanPro.Security.Models.ApplicationUser", "Realisateur")
+                        .WithMany()
+                        .HasForeignKey("RealisateurID");
                 });
 #pragma warning restore 612, 618
         }

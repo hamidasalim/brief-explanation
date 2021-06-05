@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using PlanPro.Security.Models;
+using PlanPro.Entities.Models;
 using PlanPro.Security.UserConstant;
 using PlanPro.Security.ViewModels;
 using System;
