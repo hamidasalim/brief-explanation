@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Business", "PlanPro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Entities", "PlanPro.Entities\PlanPro.Entities.csproj", "{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanPro.Security", "PlanPro.Security\PlanPro.Security.csproj", "{DD871BA1-1403-4924-8091-CD995515AEE3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13EF036F-F3D5-4BCA-B13A-F6DF6103D795}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD871BA1-1403-4924-8091-CD995515AEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD871BA1-1403-4924-8091-CD995515AEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD871BA1-1403-4924-8091-CD995515AEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD871BA1-1403-4924-8091-CD995515AEE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
