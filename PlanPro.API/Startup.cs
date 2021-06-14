@@ -1,27 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PlanPro.Business;
 using PlanPro.Business.Interfaces;
-using PlanPro.Business.IServices;
 using PlanPro.Business.Services;
 using PlanPro.Entities.Models;
-using PlanPro.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PlanPro.API
 {
@@ -37,10 +28,10 @@ namespace PlanPro.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            //services.AddControllers().AddNewtonsoftJson(options =>
-            // options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            //);
+            //services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             //Configuration for SQL server
             //Définition du dbContect en lui donnant une chaine de connection string de l'appsetting 
@@ -59,13 +50,9 @@ namespace PlanPro.API
                 { Title = "Plan Pro", Description = "DotNet Core Api 3.1 - with swagger" });
             });
 
-            //Security configuration
-            // For Entity Framework  
-            services.AddDbContext<SecurityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
-
             // For Identity  
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<SecurityDbContext>()
+                .AddEntityFrameworkStores<PlanProDbContext>()
                 .AddDefaultTokenProviders();
 
             // Adding Authentication  

@@ -19,7 +19,8 @@ namespace PlanPro.Business.Configuration
 
             builder.HasMany(p => p.Participants);
 
-            builder.HasOne(p => p.ChefProjet);
+            builder.HasOne(p => p.ChefProjet)
+                .WithMany(a => a.Projects);
 
             builder
                 .ToTable("Projets");

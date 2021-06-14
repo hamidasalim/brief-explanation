@@ -5,7 +5,7 @@ namespace PlanPro.Entities.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        //public List<Projet> Projects { get; set; }
-        //public List<Tache> Tasks { get; set; }
+        public virtual List<Projet> Projects { get; set; }
+        public virtual List<Tache> Tasks { get; set; }
     }
 }

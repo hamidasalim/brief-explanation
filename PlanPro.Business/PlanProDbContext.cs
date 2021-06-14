@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PlanPro.Business.Configuration;
 using PlanPro.Entities;
 
 namespace PlanPro.Business
 {
-    public class PlanProDbContext : DbContext
+    public class PlanProDbContext : IdentityDbContext
     {
         public DbSet<Projet> Projets { get; set; }
         public DbSet<Tache> Taches { get; set; }
@@ -15,6 +16,8 @@ namespace PlanPro.Business
         { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+            //other configs
             builder.ApplyConfiguration(new ProjetConfiguration());
             builder.ApplyConfiguration(new TacheConfiguration());
             builder.ApplyConfiguration(new EquipeConfiguration());

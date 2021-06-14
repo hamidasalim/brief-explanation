@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
+using PlanPro.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PlanPro.API.Controllers
@@ -16,11 +20,20 @@ namespace PlanPro.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly ITacheService _tacheService;
+        private readonly UserManager<ApplicationUser> _manager;
 
-        public TacheController(ITacheService tacheService, ILogger<TacheController> logger)
+        public TacheController(ITacheService tacheService, ILogger<TacheController> logger,
+            UserManager<ApplicationUser> manager)
         {
+            _manager = manager;
             _tacheService = tacheService;
             _logger = logger;
+        }
+
+        // You can also just take part after return and use it in async methods.
+        private async Task<ApplicationUser> GetCurrentUser()
+        {
+            return await _manager.FindByNameAsync(HttpContext.User.Identity.Name);
         }
 
         [HttpGet()]
@@ -43,7 +56,7 @@ namespace PlanPro.API.Controllers
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                 {
                     return BadRequest("ID Tache Cannot be empty");
                 }
@@ -58,6 +71,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+        [Authorize]
         public async Task<IActionResult> Add([FromBody] Tache tache)
         {
             try
@@ -66,6 +80,9 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("Tache Cannot be null");
                 }
+                //GET Current user
+                ApplicationUser user = GetCurrentUser().Result;
+                tache.RealisateurID = user.Id;
                 Tache savedTache = await _tacheService.AddTache(tache);
                 return Ok(savedTache);
             }
@@ -85,6 +102,9 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("Tache Cannot be null");
                 }
+                //GET Current user
+                ApplicationUser user = GetCurrentUser().Result;
+                tacheToUpdate.RealisateurID = user.Id;
                 Tache updatedTache = await _tacheService.UpdateTache(tacheToUpdate);
                 return Ok(updatedTache);
             }
