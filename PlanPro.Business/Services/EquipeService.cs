@@ -46,6 +46,8 @@ namespace PlanPro.Business.Services
         {
             Equipe equipe = await _projetRepository.GetByIdAsync(idEquipe);
             equipe.Members = new List<ApplicationUser>();
+            if (equipe.IdMembers == null)
+                return equipe;
             foreach (string idMember in equipe.IdMembers)
             {
                 ApplicationUser member = await _userManager.FindByIdAsync(idMember);
@@ -53,6 +55,19 @@ namespace PlanPro.Business.Services
                     equipe.Members.Add(member);
             }
             return equipe;
+        }
+
+        public async Task<List<Equipe>> GetMyEquipe(int myId)
+        {
+            List <Equipe> allEquipe = await _projetRepository.GetAllAsync();
+            List<Equipe> myEquipe = null;
+
+            foreach (Equipe equipe in allEquipe )
+            {
+                if (equipe.IDChef .Equals(myId))
+                    myEquipe.Add(equipe);
+            }
+            return myEquipe;
         }
 
         public async Task<Equipe> AddEquipe(Equipe equipeToSave)

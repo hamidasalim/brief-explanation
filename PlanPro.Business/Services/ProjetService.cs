@@ -25,6 +25,40 @@ namespace PlanPro.Business.Services
             return await _projetRepository.GetAllAsync();
             // await _planProDbContext.Projets.ToListAsync();
         }
+        public async Task<List<Projet>> GetMyProjects(int myId)
+        {
+            List<Projet> projectList = await _projetRepository.GetAllAsync();
+            Boolean yes = false;
+            List<Projet> myProjectList = null;
+            foreach (Projet projet in projectList )
+            {
+                if (projet.ChefProjetID !=null)
+                {
+                    if (projet.ChefProjetID.Equals(myId))
+                    {
+                        myProjectList.Add(projet);
+                    }
+                    else
+                    {
+                        if (projet.IdParticipants != null)
+                        {
+                            foreach (string id in projet.IdParticipants)
+                            {
+                                if (id.Equals(myId))
+                                    yes = true;
+                                break;
+                            }
+                            if (yes == true)
+                                myProjectList.Add(projet);
+                        }
+                    }
+                }
+                
+            }
+
+            return myProjectList;
+            // await _planProDbContext.Projets.ToListAsync();
+        }
 
         public async Task<Projet> GetProject(int idProjet)
         {
@@ -55,5 +89,7 @@ namespace PlanPro.Business.Services
             _projetRepository.Remove(projetToDelete);
             await _projetRepository.CommitAsync();
         }
+
+       
     }
 }

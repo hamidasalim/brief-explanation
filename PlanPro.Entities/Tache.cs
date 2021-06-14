@@ -12,6 +12,7 @@ namespace PlanPro.Entities
         public string Status { get; set; }
         public string Description { get; set; }
         public int ProjetID { get; set; }
+        public int CreatorId { get; set; }
         public Projet Projet { get; set; }
         public string RealisateurID { get; set; }
         public ApplicationUser Realisateur { get; set; }

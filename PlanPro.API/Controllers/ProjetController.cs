@@ -16,6 +16,7 @@ namespace PlanPro.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IProjetService _projetService;
+   
 
         public ProjetController(IProjetService projetService, ILogger<ProjetController> logger)
         {
@@ -106,6 +107,20 @@ namespace PlanPro.API.Controllers
                 }
                 await _projetService.DelteProjet(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("{myId}")]
+        public async Task<IActionResult> GetMy(int myId)
+        {
+            try
+            {
+                List<Projet> projets = await _projetService.GetMyProjects(myId);
+                return Ok(projets);
             }
             catch (Exception ex)
             {

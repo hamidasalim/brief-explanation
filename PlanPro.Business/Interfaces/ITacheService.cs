@@ -13,5 +13,7 @@ namespace PlanPro.Business.Interfaces
         Task<Tache> AddTache(Tache tacheToSave);
         Task<Tache> UpdateTache(Tache tacheToUpdate);
         Task DelteTache(int idTache);
+        Task<List<Tache>> GetProjectTaches(int idProjet);
+        Task<List<Tache>> GetMyTaches(int idProjet);
     }
 }

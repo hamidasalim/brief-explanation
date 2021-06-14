@@ -54,6 +54,8 @@ namespace PlanPro.Security.UserConstant
                     new Claim(ClaimTypes.Actor, "AFFECT_TASK"),
                     //Project claims
                     new Claim(ClaimTypes.Actor, "VIEW_PROJECT"),
+                    new Claim(ClaimTypes.Actor, "CREATE_PROJECT"),
+                    new Claim(ClaimTypes.Actor, "DELETE_PROJECT"),
                     new Claim(ClaimTypes.Actor, "MANAGE_PROJECT"),
                     new Claim(ClaimTypes.Actor, "MANAGE_PROJECT_CHEF_EQUIPE"),
                     new Claim(ClaimTypes.Actor, "MANAGE_CHEF_EQUIPE"),
@@ -67,6 +69,7 @@ namespace PlanPro.Security.UserConstant
         {
             return new List<Claim>
                 {
+                     new Claim(ClaimTypes.Actor, "MANAGE_ALL_USER"),
                     //Task claims
                     new Claim(ClaimTypes.Actor, "VIEW_TASKS"),
                     new Claim(ClaimTypes.Actor, "STATUS_TASK"),
@@ -78,6 +81,8 @@ namespace PlanPro.Security.UserConstant
                     new Claim(ClaimTypes.Actor, "VIEW_PROJECT"),
                     new Claim(ClaimTypes.Actor, "MANAGE_PROJECT"),
                     new Claim(ClaimTypes.Actor, "MANAGE_CHEF_EQUIPE"),
+                     new Claim(ClaimTypes.Actor, "CREATE_PROJECT"),
+                    new Claim(ClaimTypes.Actor, "DELETE_PROJECT"),
                     //Equipe Claims
                     new Claim(ClaimTypes.Actor, "VIEW_USERS"),
                     new Claim(ClaimTypes.Actor, "MANAGE_USERS"),

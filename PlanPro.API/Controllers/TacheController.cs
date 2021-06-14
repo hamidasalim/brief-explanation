@@ -113,6 +113,34 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("{idProjet}")]
+        public async Task<IActionResult> GetProjectTask(int idProjet)
+        {
+            try
+            {
+                List<Tache> taches = await _tacheService.GetProjectTaches(idProjet);
+                return Ok(taches);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("{myId}")]
+        public async Task<IActionResult> GetMyTask(int myId)
+        {
+            try
+            {
+                List<Tache> taches = await _tacheService.GetMyTaches(myId);
+                return Ok(taches);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

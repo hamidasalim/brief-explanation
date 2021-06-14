@@ -1,6 +1,7 @@
 ﻿using PlanPro.Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlanPro.Entities
 {
@@ -15,5 +16,7 @@ namespace PlanPro.Entities
         public string ChefProjetID { get; set; }
         public ApplicationUser ChefProjet { get; set; }
         public List<ApplicationUser> Participants { get; set; }
+        [NotMapped]
+        public List<string> IdParticipants { get; set; }
     }
 }

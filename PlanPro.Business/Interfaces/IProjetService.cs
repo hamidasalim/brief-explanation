@@ -13,5 +13,6 @@ namespace PlanPro.Business.Interfaces
         Task<Projet> AddProjet(Projet projetToSave);
         Task<Projet> UpdateProjet(Projet projetToUpdate);
         Task DelteProjet(int idProjet);
+        Task<List<Projet>> GetMyProjects(int myId);
     }
 }

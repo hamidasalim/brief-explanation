@@ -231,5 +231,19 @@ namespace PlanPro.API.Controllers
                     break;
             }
         }
+
+        /*public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                List<ApplicationUser> users = await ApplicationUser.GetAllAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }*/
     }
 }

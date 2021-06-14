@@ -38,6 +38,21 @@ namespace PlanPro.API.Controllers
             }
         }
 
+        [HttpGet("{myId}")]
+        public async Task<IActionResult> GetMy(int myId)
+        {
+            try
+            {
+                List<Equipe> equipes = await _equipeService.GetMyEquipe(myId);
+                return Ok(equipes);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {

@@ -26,6 +26,36 @@ namespace PlanPro.Business.Services
             // await _planProDbContext.Projets.ToListAsync();
         }
 
+        public async Task<List<Tache>> GetProjectTaches(int idProjet)
+        {
+            List <Tache> taskList = await _projetRepository.GetAllAsync();
+            List<Tache> projectTaskList = null;
+            foreach (Tache task in taskList)
+            {
+                if(task.ProjetID . Equals(idProjet))
+                {
+                    projectTaskList.Add(task);
+                }
+            }
+            return projectTaskList;
+            // await _planProDbContext.Projets.ToListAsync();
+        }
+
+        public async Task<List<Tache>> GetMyTaches(int myId)
+        {
+            List<Tache> taskList = await _projetRepository.GetAllAsync();
+            List<Tache> myTaskList = null;
+            foreach (Tache task in taskList)
+            {
+                if (task.RealisateurID .Equals(myId) || task.CreatorId.Equals(myId))
+                {
+                    myTaskList.Add(task);
+                }
+            }
+            return myTaskList;
+            // await _planProDbContext.Projets.ToListAsync();
+        }
+
         public async Task<Tache> GetTache(int idTache)
         {
             return await _projetRepository.GetByIdAsync(idTache);
