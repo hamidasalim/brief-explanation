@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using PlanPro.Business.Interfaces;
 using PlanPro.Entities.Models;
 using PlanPro.Entities.UserConstant;
 using PlanPro.Entities.ViewModels;
@@ -21,14 +23,19 @@ namespace PlanPro.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserService userService;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
 
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UserController(ILogger<UserController> logger, IUserService _userService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+            this.userService = _userService;
             this.roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
+
         }
 
         [HttpPost]
@@ -232,11 +239,13 @@ namespace PlanPro.API.Controllers
             }
         }
 
-        /*public async Task<IActionResult> GetAllUsers()
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllUsers()
         {
             try
             {
-                List<ApplicationUser> users = await ApplicationUser.GetAllAsync();
+                List<ApplicationUser> users = await userService.GetAllUsers();
                 return Ok(users);
             }
             catch (Exception ex)
@@ -244,6 +253,40 @@ namespace PlanPro.API.Controllers
                 _logger.Log(LogLevel.Error, ex, null);
                 return BadRequest(ex.Message);
             }
-        }*/
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllChefEquipe()
+        {
+            try
+            {
+                List<ApplicationUser> users = await userService.GetAllChefEquipes();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllEmployee()
+        {
+            try
+            {
+                List<ApplicationUser> users = await userService.GetAllEmployee();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

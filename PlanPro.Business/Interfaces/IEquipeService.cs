@@ -10,7 +10,7 @@ namespace PlanPro.Business.Interfaces
     {
         Task<List<Equipe>> GetAllEquipes();
         Task<Equipe> GetEquipe(int idEquipe);
-        Task<List<Equipe>> GetMyEquipe(int myId);
+       // Task<List<Equipe>> GetMyEquipe(int myId);
         Task<Equipe> AddEquipe(Equipe equipeToSave);
         Task<Equipe> UpdateEquipe(Equipe equipeToUpdate);
         //Task<Equipe> RemoveMemberEquipe(Equipe equipeToUpdate);

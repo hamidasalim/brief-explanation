@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
+using PlanPro.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,17 @@ namespace PlanPro.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IEquipeService _equipeService;
+        private readonly UserManager<ApplicationUser> _manager;
 
         public EquipeController(IEquipeService equipeService, ILogger<EquipeController> logger)
         {
             _equipeService = equipeService;
             _logger = logger;
+        }
+
+        private async Task<ApplicationUser> GetCurrentUser()
+        {
+            return await _manager.FindByNameAsync(HttpContext.User.Identity.Name);
         }
 
         [HttpGet()]
@@ -38,12 +46,17 @@ namespace PlanPro.API.Controllers
             }
         }
 
-        [HttpGet("{myId}")]
-        public async Task<IActionResult> GetMy(int myId)
+        [HttpGet()]
+        /*public async Task<IActionResult> GetMy(int myId)
         {
             try
             {
-                List<Equipe> equipes = await _equipeService.GetMyEquipe(myId);
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest("User not found ");
+                }
+                List<Equipe> equipes = await _equipeService.GetMyEquipe(Int16.Parse(user.Id));
                 return Ok(equipes);
             }
             catch (Exception ex)
@@ -51,7 +64,7 @@ namespace PlanPro.API.Controllers
                 _logger.Log(LogLevel.Error, ex, null);
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -73,6 +86,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+
         public async Task<IActionResult> Add([FromBody] Equipe equipe)
         {
             try
@@ -81,6 +95,12 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("Equipe Cannot be null");
                 }
+                /*ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest(" ID USER Cannot be empty");
+                }
+                equipe.IDChef = user.Id;*/
                 Equipe savedEquipe = await _equipeService.AddEquipe(equipe);
                 return Ok(savedEquipe);
             }

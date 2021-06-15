@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
+using PlanPro.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +19,25 @@ namespace PlanPro.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IProjetService _projetService;
-   
+        private readonly UserManager<ApplicationUser> _manager;
+
 
         public ProjetController(IProjetService projetService, ILogger<ProjetController> logger)
         {
             _projetService = projetService;
             _logger = logger;
         }
-
+        private async Task<ApplicationUser> GetCurrentUser()
+        {
+            
+            return await _manager.FindByNameAsync(HttpContext.User.Identity.Name);
+          
+           // Console.WriteLine(HttpContext.User);
+        }
+       /* private async Task<ApplicationUser> GetCurrentProject()
+        {
+            
+        }*/
         [HttpGet()]
         public async Task<IActionResult> GetAll()
         {
@@ -59,10 +73,17 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+        [Authorize]
         public async Task<IActionResult> Add([FromBody] Projet projet)
         {
             try
             {
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest("ID UserCannot be empty");
+                }
+                projet.ChefProjetID = user.Id;
                 if (projet == null)
                 {
                     return BadRequest("Projet Cannot be null");
@@ -114,12 +135,18 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("{myId}")]
-        public async Task<IActionResult> GetMy(int myId)
+        [HttpGet()]
+        public async Task<IActionResult> GetMy()
         {
             try
             {
-                List<Projet> projets = await _projetService.GetMyProjects(myId);
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest("ID UserCannot be empty");
+                }
+                List<Projet> projets = await _projetService.GetMyProjects(Int16.Parse(user.Id));
+               
                 return Ok(projets);
             }
             catch (Exception ex)

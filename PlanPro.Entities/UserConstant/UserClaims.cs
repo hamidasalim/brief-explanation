@@ -5,6 +5,12 @@ using System.Text;
 
 namespace PlanPro.Entities.UserConstant
 {
+
+    public class Policies
+    {
+        public const string VIEW_TASKS = "Lire les données de taches";
+    }
+
     public static class UserClaims
     {
         /********* Role Employee**********/
@@ -13,7 +19,7 @@ namespace PlanPro.Entities.UserConstant
             return new List<Claim>
                 {
                     //Task claims
-                    new Claim(ClaimTypes.Actor, "VIEW_TASKS"),
+                    new Claim(ClaimTypes.Actor, Policies.VIEW_TASKS),
                     new Claim(ClaimTypes.Actor, "STATUS_TASK"),
                     //Project claims
                     new Claim(ClaimTypes.Actor, "VIEW_PROJECT"),

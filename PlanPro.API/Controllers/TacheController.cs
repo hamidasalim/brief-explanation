@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
 using PlanPro.Entities.Models;
+using PlanPro.Entities.UserConstant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet()]
+        [Authorize(Policy = Policies.VIEW_TASKS)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -82,7 +84,7 @@ namespace PlanPro.API.Controllers
                 }
                 //GET Current user
                 ApplicationUser user = GetCurrentUser().Result;
-                tache.RealisateurID = user.Id;
+                tache.CreatorId = user.Id;
                 Tache savedTache = await _tacheService.AddTache(tache);
                 return Ok(savedTache);
             }
@@ -104,7 +106,7 @@ namespace PlanPro.API.Controllers
                 }
                 //GET Current user
                 ApplicationUser user = GetCurrentUser().Result;
-                tacheToUpdate.RealisateurID = user.Id;
+                //tacheToUpdate.RealisateurID = user.Id;
                 Tache updatedTache = await _tacheService.UpdateTache(tacheToUpdate);
                 return Ok(updatedTache);
             }
@@ -147,12 +149,18 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("{myId}")]
-        public async Task<IActionResult> GetMyTask(int myId)
+        [HttpGet()]
+        public async Task<IActionResult> GetMyTask()
         {
             try
             {
-                List<Tache> taches = await _tacheService.GetMyTaches(myId);
+                
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id .Equals (0))
+                {
+                    return BadRequest("ID User Cannot be empty");
+                }
+                List<Tache> taches = await _tacheService.GetMyTaches(Int16.Parse(user.Id));
                 return Ok(taches);
             }
             catch (Exception ex)

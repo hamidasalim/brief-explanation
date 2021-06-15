@@ -42,6 +42,7 @@ namespace PlanPro.API
             services.AddScoped<IProjetService, ProjetService>();
             services.AddScoped<ITacheService, TacheService>();
             services.AddScoped<IEquipeService, EquipeService>();
+            services.AddScoped<IUserService, UserService>();
 
             //swagger
             services.AddSwaggerGen(c =>
