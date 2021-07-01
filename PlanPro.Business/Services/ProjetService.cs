@@ -13,12 +13,14 @@ namespace PlanPro.Business.Services
     public class ProjetService : IProjetService
     {
         private IRepository<Projet> _projetRepository;
+        private IRepository<Tache> _tasksRepository;
         private PlanProDbContext _planProDbContext;
 
         public ProjetService(PlanProDbContext planProDbContext)
         {
             _planProDbContext = planProDbContext;
             _projetRepository = new Repository<Projet>(_planProDbContext);
+            _tasksRepository = new Repository<Tache>(_planProDbContext);
         }
 
         public async Task<List<Projet>> GetAllProjets()
@@ -26,11 +28,11 @@ namespace PlanPro.Business.Services
             return await _projetRepository.GetAllAsync();
             // await _planProDbContext.Projets.ToListAsync();
         }
-        public async Task<List<Projet>> GetMyProjects(int myId)
+        public async Task<List<Projet>> GetMyProjects(string myId)
         {
             List<Projet> projectList = await _projetRepository.GetAllAsync();
             Boolean yes = false;
-            List<Projet> myProjectList = null;
+            List<Projet> myProjectList = new List<Projet>();
             foreach (Projet projet in projectList )
             {
                 if (projet.ChefProjetID !=null)
@@ -60,12 +62,28 @@ namespace PlanPro.Business.Services
             }
 
             return myProjectList;
-            // await _planProDbContext.Projets.ToListAsync();
+         
         }
 
         public async Task<Projet> GetProject(int idProjet)
         {
-            return await _projetRepository.GetByIdAsync(idProjet);
+            Projet projet= await _projetRepository.GetByIdAsync(idProjet);
+            projet.Tasks = await GetProjectTaches(projet.ID);
+            return projet;
+        }
+
+        private async Task<List<Tache>> GetProjectTaches(int idProjet)
+        {
+            List<Tache> tasksList = await _tasksRepository.GetAllAsync();
+            List<Tache> projectTaskList = new List<Tache>();
+            foreach (Tache tache in tasksList)
+            {
+                if (tache.ProjetID.Equals(idProjet))
+                {
+                    projectTaskList.Add(tache);
+                }
+            }
+            return projectTaskList;
         }
 
         public async Task<Projet> AddProjet(Projet projetToSave)
@@ -89,52 +107,17 @@ namespace PlanPro.Business.Services
             {
                 throw new Exception($"Projet with id={idProjet} not found");
             }
+            foreach( Tache task in projetToDelete.Tasks)
+            {
+                _tasksRepository.Remove(task);
+            }
             _projetRepository.Remove(projetToDelete);
             await _projetRepository.CommitAsync();
         }
 
-        /*public  Task<List<ApplicationUser>> GetProjectUsers(Projet project)
-        {
-            List<ApplicationUser> userList = null;
-            foreach (ApplicationUser user in project.Participants)
-            {
-                if (user != null)
-                {
-                    userList.Add(user);
-                }
-            }
-            return userList;
-        }
+        
+        
 
-        public Task<Projet> AddTeamToProject(Equipe team, Projet project)
-        {
-            foreach(ApplicationUser teamMember in team.Members)
-            {
-                if ( teamMember != null)
-                {
-                    project.Participants.Add(teamMember);
-                    if(teamMember.Id != null)
-                    {
-                        project.IdParticipants.Add(teamMember.Id);
-                    }
-                }
-            }
-            return project;
-        }
-
-        public Task<Projet> AddUserToProject(ApplicationUser user, Projet project)
-        {
-            
-                if (user != null)
-                {
-                    project.Participants.Add(user);
-                    if (user.Id != null)
-                    {
-                        project.IdParticipants.Add(user.Id);
-                    }
-                }
-            
-            return project;
-        }*/
+        
     }
 }

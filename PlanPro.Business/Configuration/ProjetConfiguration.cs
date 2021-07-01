@@ -15,12 +15,13 @@ namespace PlanPro.Business.Configuration
                 .Property(m => m.ID)
                 .UseIdentityColumn();
 
-            builder.HasMany(p => p.Tasks);
+            //builder.HasMany(p => p.Tasks);
 
-            builder.HasMany(p => p.Participants);
+            builder.HasMany(p => p.Participants)
+                .WithOne(x => x.PaticipProject);
 
             builder.HasOne(p => p.ChefProjet)
-                .WithMany(a => a.Projects);
+                .WithMany(a => a.ChefProjects);
 
             builder
                 .ToTable("Projets");

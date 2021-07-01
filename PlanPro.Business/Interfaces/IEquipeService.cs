@@ -1,4 +1,5 @@
 ﻿using PlanPro.Entities;
+using PlanPro.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,8 @@ namespace PlanPro.Business.Interfaces
     {
         Task<List<Equipe>> GetAllEquipes();
         Task<Equipe> GetEquipe(int idEquipe);
-       // Task<List<Equipe>> GetMyEquipe(int myId);
+        Task<List<Equipe>> GetMyEquipe(string myId);
+        Task<List<ApplicationUser>> GetEquipeMembers(int idEquipe);
         Task<Equipe> AddEquipe(Equipe equipeToSave);
         Task<Equipe> UpdateEquipe(Equipe equipeToUpdate);
         //Task<Equipe> RemoveMemberEquipe(Equipe equipeToUpdate);

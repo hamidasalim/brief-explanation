@@ -11,44 +11,71 @@ namespace PlanPro.Business.Services
 {
     public class TacheService : ITacheService
     {
-        private IRepository<Tache> _projetRepository;
+        private IRepository<Tache> _tasksRepository;
         private PlanProDbContext _planProDbContext;
 
         public TacheService(PlanProDbContext planProDbContext)
         {
             _planProDbContext = planProDbContext;
-            _projetRepository = new Repository<Tache>(_planProDbContext);
+            _tasksRepository = new Repository<Tache>(_planProDbContext);
         }
 
         public async Task<List<Tache>> GetAllTaches()
         {
-            return await _projetRepository.GetAllAsync();
+            return await _tasksRepository.GetAllAsync();
             // await _planProDbContext.Projets.ToListAsync();
-        }
+        }  
 
         public async Task<List<Tache>> GetProjectTaches(int idProjet)
         {
-            List <Tache> taskList = await _projetRepository.GetAllAsync();
-            List<Tache> projectTaskList = null;
+            List <Tache> taskList = await _tasksRepository.GetAllAsync();
+            List<Tache> projectTaskList = new List<Tache>();
             foreach (Tache task in taskList)
             {
-                if(task.ProjetID . Equals(idProjet))
+                if(task.ProjetID.Equals(idProjet))
                 {
                     projectTaskList.Add(task);
                 }
             }
             return projectTaskList;
             // await _planProDbContext.Projets.ToListAsync();
-        }
+        }  
 
-        public async Task<List<Tache>> GetMyTaches(int myId)
+        public async Task<List<Tache>> GetMyTaches(String myId)
         {
-            List<Tache> taskList = await _projetRepository.GetAllAsync();
-            List<Tache> myTaskList = null;
+            List<Tache> taskList = await _tasksRepository.GetAllAsync();
+            List<Tache> myTaskList = new List<Tache>(); 
             foreach (Tache task in taskList)
             {
-                if (task.RealisateurID .Equals(myId) || task.CreatorId.Equals(myId))
+                if (task != null)
                 {
+                    if (/*task.RealisateurID.Equals(myId) ||*/ task.CreatorId.Equals(myId))
+                        
+                        {
+                        myTaskList.Add(task);
+                    }
+                }
+            }
+            return myTaskList;
+            // await _planProDbContext.Projets.ToListAsync();
+        }
+        public async Task<List<Tache>> GetMyProjectTasks(string myId, int idProjet)
+        {
+            List<Tache> taskList = await _tasksRepository.GetAllAsync();
+            List<Tache> myTaskList = new List<Tache>();
+            List<Tache> projectTaskList = new List<Tache>();
+            foreach (Tache task in taskList)
+            {
+                if (task.ProjetID.Equals(idProjet))
+                {
+                    projectTaskList.Add(task);
+                }
+            }
+            foreach (Tache task in projectTaskList)
+            {
+                //if (task.RealisateurID.Equals(myId) || task.CreatorId.Equals(myId))
+                    if ( task.CreatorId.Equals(myId))
+                    {
                     myTaskList.Add(task);
                 }
             }
@@ -58,20 +85,20 @@ namespace PlanPro.Business.Services
 
         public async Task<Tache> GetTache(int idTache)
         {
-            return await _projetRepository.GetByIdAsync(idTache);
+            return await _tasksRepository.GetByIdAsync(idTache);
         }
 
         public async Task<Tache> AddTache(Tache tacheToSave)
         {
-            await _projetRepository.AddAsync(tacheToSave);
-            await _projetRepository.CommitAsync();
+            await _tasksRepository.AddAsync(tacheToSave);
+            await _tasksRepository.CommitAsync();
             return tacheToSave;
         }
 
         public async Task<Tache> UpdateTache(Tache tacheToUpdate)
         {
-            Tache updatedTache = _projetRepository.Update(tacheToUpdate);
-            await _projetRepository.CommitAsync();
+            Tache updatedTache = _tasksRepository.Update(tacheToUpdate);
+            await _tasksRepository.CommitAsync();
             return updatedTache;
         }
 
@@ -82,8 +109,8 @@ namespace PlanPro.Business.Services
             {
                 throw new Exception($"Tache with id={idTache} not found");
             }
-            _projetRepository.Remove(tacheToDelete);
-            await _projetRepository.CommitAsync();
+            _tasksRepository.Remove(tacheToDelete);
+            await _tasksRepository.CommitAsync();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace PlanPro.Business.Interfaces
     {
         Task<List<ApplicationUser>> GetAllUsers();
         Task<List<ApplicationUser>> GetAllChefEquipes();
+        Task<List<ApplicationUser>> GetAllChefProjet();
         Task<List<ApplicationUser>> GetAllEmployee();
+        Task<List<ApplicationUser>> GetAllEmployeeAndChefEquipe();
     }
 }

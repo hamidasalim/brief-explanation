@@ -17,6 +17,14 @@ namespace PlanPro.Business.Configuration
                 .Property(m => m.ID)
                 .UseIdentityColumn();
 
+            builder.HasOne(l => l.Chef)
+                .WithMany(n => n.Teams);
+
+           // builder.HasMany(w => w.Members);
+                
+                    
+                
+
             builder.Property(p => p.IdMembers)
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),

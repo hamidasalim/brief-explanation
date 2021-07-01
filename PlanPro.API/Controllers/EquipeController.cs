@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
 using PlanPro.Entities.Models;
+using PlanPro.Entities.UserConstant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +22,11 @@ namespace PlanPro.API.Controllers
         private readonly IEquipeService _equipeService;
         private readonly UserManager<ApplicationUser> _manager;
 
-        public EquipeController(IEquipeService equipeService, ILogger<EquipeController> logger)
+        public EquipeController(IEquipeService equipeService, UserManager<ApplicationUser> manager, ILogger<EquipeController> logger)
         {
             _equipeService = equipeService;
             _logger = logger;
+            _manager = manager;
         }
 
         private async Task<ApplicationUser> GetCurrentUser()
@@ -32,6 +35,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet()]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -47,7 +51,8 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet()]
-        /*public async Task<IActionResult> GetMy(int myId)
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
+        public async Task<IActionResult> GetMy( )
         {
             try
             {
@@ -56,7 +61,7 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("User not found ");
                 }
-                List<Equipe> equipes = await _equipeService.GetMyEquipe(Int16.Parse(user.Id));
+                List<Equipe> equipes = await _equipeService.GetMyEquipe((user.Id).ToString());
                 return Ok(equipes);
             }
             catch (Exception ex)
@@ -64,9 +69,10 @@ namespace PlanPro.API.Controllers
                 _logger.Log(LogLevel.Error, ex, null);
                 return BadRequest(ex.Message);
             }
-        }*/
+        }
 
         [HttpGet("{id}")]
+      //  [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -84,9 +90,28 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("{id}")]
+        //  [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
+        public async Task<IActionResult> GetMembers(int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    return BadRequest("ID Equipe Cannot be empty");
+                }
+                List<ApplicationUser> equipe = await _equipeService.GetEquipeMembers(id);
+                return Ok(equipe);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPost()]
-
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Add([FromBody] Equipe equipe)
         {
             try
@@ -95,12 +120,13 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("Equipe Cannot be null");
                 }
-                /*ApplicationUser user = GetCurrentUser().Result;
-                if (user.Id.Equals(0))
-                {
-                    return BadRequest(" ID USER Cannot be empty");
-                }
-                equipe.IDChef = user.Id;*/
+                 ApplicationUser user = GetCurrentUser().Result;
+                  if (user.Id.Equals(0))
+                  {
+                      return BadRequest(" ID USER Cannot be empty");
+                  }
+                  equipe.IDChef = user.Id;
+             
                 Equipe savedEquipe = await _equipeService.AddEquipe(equipe);
                 return Ok(savedEquipe);
             }
@@ -112,6 +138,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Update([FromBody] Equipe equipeToUpdate)
         {
             try
@@ -132,6 +159,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost("{id}")]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -140,6 +168,9 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("ID Equipe Cannot be empty");
                 }
+               /* ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id != equipe.IDChef)
+                { return BadRequest("Only The Team Chef can delete the team"); }*/
                 await _equipeService.DelteEquipe(id);
                 return Ok();
             }

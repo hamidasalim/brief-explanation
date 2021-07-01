@@ -10,5 +10,6 @@ namespace PlanPro.Entities.UserConstant
         public const string Employe = "Employee";
         public const string ChefEquipe = "Chef_Equipe";
         public const string ChefProjet = "Chef_Projet";
+        public const string ChefProjetAndChefEq = "Admin,Employee";
     }
 }

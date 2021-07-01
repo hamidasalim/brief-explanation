@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using PlanPro.Business.Interfaces;
 using PlanPro.Entities;
 using PlanPro.Entities.Models;
+using PlanPro.Entities.UserConstant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,23 +23,25 @@ namespace PlanPro.API.Controllers
         private readonly UserManager<ApplicationUser> _manager;
 
 
-        public ProjetController(IProjetService projetService, ILogger<ProjetController> logger)
+        public ProjetController(IProjetService projetService, ILogger<ProjetController> logger, UserManager<ApplicationUser> manager)
         {
             _projetService = projetService;
+            _manager = manager;
             _logger = logger;
         }
         private async Task<ApplicationUser> GetCurrentUser()
         {
-            
             return await _manager.FindByNameAsync(HttpContext.User.Identity.Name);
-          
-           // Console.WriteLine(HttpContext.User);
+
+            // Console.WriteLine(HttpContext.User);
         }
-       /* private async Task<ApplicationUser> GetCurrentProject()
-        {
-            
-        }*/
+        /* private async Task<ApplicationUser> GetCurrentProject()
+         {
+
+         }*/
         [HttpGet()]
+        //[Authorize(Policy = Policies.VIEW_ALL_PROJECTS)]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -54,11 +57,12 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet("{id}")]
+     //   [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe) ]
         public async Task<IActionResult> Get(int id)
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                 {
                     return BadRequest("ID Projet Cannot be empty");
                 }
@@ -73,7 +77,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
-        [Authorize]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet)]
         public async Task<IActionResult> Add([FromBody] Projet projet)
         {
             try
@@ -81,13 +85,13 @@ namespace PlanPro.API.Controllers
                 ApplicationUser user = GetCurrentUser().Result;
                 if (user.Id.Equals(0))
                 {
-                    return BadRequest("ID UserCannot be empty");
+                    return BadRequest("ID User Cannot be empty");
                 }
-                projet.ChefProjetID = user.Id;
                 if (projet == null)
                 {
                     return BadRequest("Projet Cannot be null");
                 }
+                projet.ChefProjetID = user.Id;
                 Projet savedProjet = await _projetService.AddProjet(projet);
                 return Ok(savedProjet);
             }
@@ -99,6 +103,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+      //  [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Update([FromBody] Projet projetToUpdate)
         {
             try
@@ -118,6 +123,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost("{id}")]
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet )]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -126,6 +132,9 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("ID Projet Cannot be empty");
                 }
+                //ApplicationUser user = GetCurrentUser().Result;
+               /* if (user.Id != projet.ChefProjetID)
+                { return BadRequest("Only The creator can delete the project"); }*/
                 await _projetService.DelteProjet(id);
                 return Ok();
             }
@@ -136,6 +145,7 @@ namespace PlanPro.API.Controllers
             }
         }
         [HttpGet()]
+       // [Authorize(Roles =  UserRoles.ChefProjet )]
         public async Task<IActionResult> GetMy()
         {
             try
@@ -145,8 +155,8 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("ID UserCannot be empty");
                 }
-                List<Projet> projets = await _projetService.GetMyProjects(Int16.Parse(user.Id));
-               
+                List<Projet> projets = await _projetService.GetMyProjects((user.Id).ToString());
+                
                 return Ok(projets);
             }
             catch (Exception ex)

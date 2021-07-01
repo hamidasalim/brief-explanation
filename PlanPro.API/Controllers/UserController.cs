@@ -27,10 +27,12 @@ namespace PlanPro.API.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
+        private readonly UserManager<ApplicationUser> _manager;
 
-        public UserController(ILogger<UserController> logger, IUserService _userService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UserController(ILogger<UserController> logger, UserManager<ApplicationUser> manager, IUserService _userService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+            _manager = manager;
             this.userService = _userService;
             this.roleManager = roleManager;
             _configuration = configuration;
@@ -163,6 +165,7 @@ namespace PlanPro.API.Controllers
             if (await roleManager.RoleExistsAsync(UpdateRoleModel.RoleName))
             {
                 await userManager.AddToRoleAsync(user, UpdateRoleModel.RoleName);
+
             }
 
             return Ok(new Response { Status = "Success", Message = "Role updated successfully!" });
@@ -240,7 +243,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize(Roles = UserRoles.Admin )]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -256,7 +259,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet )]
         public async Task<IActionResult> GetAllChefEquipe()
         {
             try
@@ -270,9 +273,24 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet]
+        //[Authorize(Roles = UserRoles.Admin )]
+        public async Task<IActionResult> GetAllChefProjet()
+        {
+            try
+            {
+                List<ApplicationUser> users = await userService.GetAllChefProjet();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet]
-        //[Authorize]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet)]
         public async Task<IActionResult> GetAllEmployee()
         {
             try
@@ -285,6 +303,36 @@ namespace PlanPro.API.Controllers
                 _logger.Log(LogLevel.Error, ex, null);
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet)]
+        public async Task<IActionResult> GetAllEmployeAndChefEquipe()
+        {
+            try
+            {
+                List<ApplicationUser> users = await userService.GetAllEmployeeAndChefEquipe();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }
+        private async Task<ApplicationUser> GetCurrentUser()
+        {
+            return await _manager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            // Console.WriteLine(HttpContext.User);
+        }
+
+        [HttpGet]
+        public async Task<ApplicationUser> GetUserInfo()
+        {
+           ApplicationUser user = await GetCurrentUser();
+            return user;
+            // Console.WriteLine(HttpContext.User);
         }
 
 

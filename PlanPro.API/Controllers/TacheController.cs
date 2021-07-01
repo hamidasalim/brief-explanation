@@ -38,7 +38,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet()]
-        [Authorize(Policy = Policies.VIEW_TASKS)]
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -54,6 +54,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpGet("{id}")]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -73,7 +74,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
-        [Authorize]
+      //  [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet)]
         public async Task<IActionResult> Add([FromBody] Tache tache)
         {
             try
@@ -96,6 +97,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost()]
+      //  [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Update([FromBody] Tache tacheToUpdate)
         {
             try
@@ -118,6 +120,7 @@ namespace PlanPro.API.Controllers
         }
 
         [HttpPost("{id}")]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -126,6 +129,16 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("ID Tache Cannot be empty");
                 }
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest("ID User Cannot be empty");
+                }
+                Tache tache = await _tacheService.GetTache(id);
+                    if (user.Id != tache.CreatorId)
+                    { return BadRequest("Only creator can delete the task"); }
+
+
                 await _tacheService.DelteTache(id);
                 return Ok();
             }
@@ -135,12 +148,13 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("{idProjet}")]
-        public async Task<IActionResult> GetProjectTask(int idProjet)
+        [HttpGet("{id}")]
+       // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.ChefProjet + "," + UserRoles.ChefEquipe)]
+        public async Task<IActionResult> GetProjectTask(int id)
         {
             try
             {
-                List<Tache> taches = await _tacheService.GetProjectTaches(idProjet);
+                List<Tache> taches = await _tacheService.GetProjectTaches(id);
                 return Ok(taches);
             }
             catch (Exception ex)
@@ -150,6 +164,7 @@ namespace PlanPro.API.Controllers
             }
         }
         [HttpGet()]
+        
         public async Task<IActionResult> GetMyTask()
         {
             try
@@ -160,7 +175,7 @@ namespace PlanPro.API.Controllers
                 {
                     return BadRequest("ID User Cannot be empty");
                 }
-                List<Tache> taches = await _tacheService.GetMyTaches(Int16.Parse(user.Id));
+                List<Tache> taches = await _tacheService.GetMyTaches(user.Id);
                 return Ok(taches);
             }
             catch (Exception ex)
@@ -169,6 +184,28 @@ namespace PlanPro.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /*[HttpGet()]
+
+        public async Task<IActionResult> GetMyProjectTask(Projet Projet)
+        {
+            try
+            {
+                ApplicationUser user = GetCurrentUser().Result;
+                if (user.Id.Equals(0))
+                {
+                    return BadRequest("ID User Cannot be empty");
+                }
+                List<Tache> taches = await _tacheService.GetMyProjectTasks(user.Id, Projet.ID);
+                return Ok(taches);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex, null);
+                return BadRequest(ex.Message);
+            }
+        }*/
+
+
 
     }
 }
