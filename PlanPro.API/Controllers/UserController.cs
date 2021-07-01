@@ -12,6 +12,7 @@ using PlanPro.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,7 +58,7 @@ namespace PlanPro.API.Controllers
 
                 //foreach (var userRole in userRoles)
                 //{
-                authClaims.Add(new Claim(ClaimTypes.Role, userRoles[0]));
+                authClaims.Add(new Claim(ClaimTypes.Role, userRoles[userRoles.Count()-1]));
                 //}
 
                 /****************/
